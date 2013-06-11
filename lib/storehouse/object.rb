@@ -13,6 +13,7 @@ module Storehouse
       end
       self.expires_at = nil if self.expires_at.to_i == 0
       self.created_at ||= Time.now.to_i
+      self.postponed ||= 0
     end
 
     def blank?
