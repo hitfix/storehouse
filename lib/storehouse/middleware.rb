@@ -35,6 +35,7 @@ module Storehouse
       response  = nil
       store     = true
       object    = Storehouse.read(path)
+      i_postponed = false
 
       # failure occurred, don't attempt to store because 
       # we don't want to continue hitting a broken store
@@ -47,8 +48,11 @@ module Storehouse
       elsif object.blank?
         response = yield
       elsif object.expired? && !render_expired?(env)
+        i_postponed = true
+        object.postponed = 1
         Storehouse.postpone(object) if Storehouse.postpone?
         response = yield
+        object.postponed = 0
       else
         response = object.rack_response
         observe_panic_mode(response[1])
@@ -57,8 +61,8 @@ module Storehouse
 
 
       if response[0].to_i == 200
-        attempt_to_store(path, response) if store
-        attempt_to_distribute(path, response)
+        attempt_to_store(path, response)                if store
+        attempt_to_distribute(path, response)           if i_postponed or !(object.postponed.to_i > 0)
       end
 
 

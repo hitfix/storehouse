@@ -5,7 +5,7 @@ require 'active_support/core_ext/object/to_json'
 module Storehouse
   class Object
 
-    attr_accessor :path, :content, :headers, :status, :expires_at, :created_at
+    attr_accessor :path, :content, :headers, :status, :expires_at, :created_at, :postponed
 
     def initialize(options = {})
       options.each do |k,v|
@@ -45,6 +45,7 @@ module Storehouse
         'status' => self.status.to_s,
         'expires_at' => self.expires_at.try(:to_s),
         'created_at' => self.created_at.try(:to_s)
+        'postponed' => self.postponed.to_s
       }
     end
 
