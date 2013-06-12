@@ -45,7 +45,7 @@ module Storehouse
         'headers' => self.headers.to_json,
         'status' => self.status.to_s,
         'expires_at' => self.expires_at.try(:to_s),
-        'created_at' => self.created_at.try(:to_s)
+        'created_at' => self.created_at.try(:to_s),
         'postponed' => self.postponed.to_s
       }
     end
