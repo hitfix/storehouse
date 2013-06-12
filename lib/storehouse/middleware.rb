@@ -36,6 +36,7 @@ module Storehouse
       store     = true
       object    = Storehouse.read(path)
       i_postponed = false
+      postponed   = 0
 
       # failure occurred, don't attempt to store because 
       # we don't want to continue hitting a broken store
@@ -59,10 +60,11 @@ module Storehouse
         store = false
       end
 
+      postponed = object.postponed      if !object.nil?
 
       if response[0].to_i == 200
         attempt_to_store(path, response)                if store
-        attempt_to_distribute(path, response)           if i_postponed or !(object.postponed.to_i > 0)
+        attempt_to_distribute(path, response)           if i_postponed or !(postponed.to_i > 0)
       end
 
 
