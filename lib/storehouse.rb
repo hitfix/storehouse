@@ -128,11 +128,14 @@ module Storehouse
     end
 
     def app_cache_path
+      regex = /(^|\.)(m)\./
+      hf_store = (env['HTTP_HOST'] =~ regex) ? "mobile" : "fullsite"
+
       @app_cache_path ||= begin
         base_path   = spec['cache_directory'] 
-        base_path ||= (Rails.application.config.action_controller.page_cache_directory rescue nil) if defined?(Rails)
+        base_path ||= (Rails.application.config.action_controller.page_cache_directory + "/#{hf_store}" rescue nil) if defined?(Rails)
         base_path ||= ENV['STOREHOUSE_CACHE_PATH']
-        base_path ||= File.join(app_root, 'public')
+        base_path ||= File.join(app_root, "public/#{hf_store}")
       end
     end
 
