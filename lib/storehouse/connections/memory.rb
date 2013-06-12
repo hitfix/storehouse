@@ -28,6 +28,7 @@ module Storehouse
         @data = {}
       end
       alias_method :clean!, :clear!
+      alias_method :expire_all!, :clear!
 
     end
   end

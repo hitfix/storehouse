@@ -86,6 +86,14 @@ module Storehouse
       end
     end
 
+    def expire_all!
+      execute(:expire_all, 60) do
+        prefix = namespaced_path('')
+        connection_for.expire_all!(prefix)
+        true
+      end
+    end
+
 
     protected
 

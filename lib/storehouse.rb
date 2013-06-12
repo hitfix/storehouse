@@ -23,7 +23,7 @@ module Storehouse
 
     @custom_path = ""
 
-    %w(read write delete expire postpone clear! clean!).each do |meth|
+    %w(read write delete expire postpone clear! clean! expire_all!).each do |meth|
       class_eval <<-EV
         def #{meth}(*args)
           return nil unless self.enabled?

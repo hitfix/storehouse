@@ -30,6 +30,13 @@ module Storehouse
         @redis.hset(path, 'expires_at', Time.now.to_i.to_s)
       end
 
+      def expire_all!(namespace = nil)
+        now = Time.now.to_i
+        @redis.keys("#{namespace}*").each do |key|
+          expire(key)
+        end
+      end
+
       def clean!(namespace = nil)
         now = Time.now.to_i
         @redis.keys("#{namespace}*").each do |key|

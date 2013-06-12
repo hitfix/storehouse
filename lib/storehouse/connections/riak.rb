@@ -77,6 +77,7 @@ module Storehouse
           end
         end
       end
+      alias_method :expire_all!, :clean!
 
       def clear!(namespace = nil)
         chunked(namespace) do |key|
