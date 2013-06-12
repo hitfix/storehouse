@@ -18,6 +18,10 @@ module Storehouse
   end
 
   class << self
+    attr_accessor :custom_path
+    attr_accessor :before_each_request
+
+    @custom_path = ""
 
     %w(read write delete expire postpone clear! clean!).each do |meth|
       class_eval <<-EV
@@ -90,7 +94,7 @@ module Storehouse
 
     def cache_path(file_path = '')
       file_path = endpoint_path(file_path)
-      File.join(app_cache_path, file_path)
+      File.join(app_cache_path,file_path)
     end
 
     def endpoint_path(path)
@@ -128,14 +132,11 @@ module Storehouse
     end
 
     def app_cache_path
-      regex = /(^|\.)(m)\./
-      hf_store = (env['HTTP_HOST'] =~ regex) ? "mobile" : "fullsite"
-
       @app_cache_path ||= begin
         base_path   = spec['cache_directory'] 
-        base_path ||= (Rails.application.config.action_controller.page_cache_directory + "/#{hf_store}" rescue nil) if defined?(Rails)
+        base_path ||= (Rails.application.config.action_controller.page_cache_directory rescue nil) if defined?(Rails)
         base_path ||= ENV['STOREHOUSE_CACHE_PATH']
-        base_path ||= File.join(app_root, "public/#{hf_store}")
+        base_path ||= File.join(app_root, "public")
       end
     end
 

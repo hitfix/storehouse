@@ -15,6 +15,7 @@ module Storehouse
     def call(env)
 
       return strip_storehouse_headers(@app.call(env)) unless Storehouse.enabled?
+      Storehouse.before_each_request.call(env)
 
       storehouse_response(env) do
         @app.call(env)
@@ -28,7 +29,7 @@ module Storehouse
       path_string   = env['PATH_INFO']
       path_string ||= env['REQUEST_URI']
 
-      path = URI.parse(path_string).path rescue nil
+      path = URI.parse(Storehouse.custom_path + path_string).path rescue nil
 
       return yield if ignore?(path, env)
 
