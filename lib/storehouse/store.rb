@@ -64,7 +64,7 @@ module Storehouse
 
     def postpone(object)
       if object.expired?
-        object.expires_at = Time.now.to_i + 10
+        object.expires_at = Time.now.to_i + 30
         write_object(object.path, object)
       end
       object
